@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "793524247722",
+    "project_id": "sakyahe-d2a9e",
+    "storage_bucket": "sakyahe-d2a9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793524247722:android:39e407bb73ec34c6aa44d3",
+        "android_client_info": {
+          "package_name": "com.example.sakyahe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "793524247722-lt1goe987aljjik972oe0ut00lakc4ab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcvYrgdR6FJNVKB0HjCjUU8sx46PZiEoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "793524247722-lt1goe987aljjik972oe0ut00lakc4ab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
