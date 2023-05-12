@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         'welcome': (context) => const WelcomeScreen(),
         'register': (context) => const RegisterScreen(),
         'login': (context) => const LoginScreen(),
-        'otp': (context) => const OtpScreen(),
+        'otp': (context) => OtpScreen(phoneNumber: '', verify: ''),
         'uinfo': (context) => const UserInfoScreen(),
         'home': (context) => const HomeScreen(),
       },

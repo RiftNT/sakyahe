@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
+import 'otp_screen.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
-  static String verify="";
   static String phoneNumber="";
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -158,14 +159,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
+                          final String phoneNumber = '+${selectedCountry.phoneCode}${phoneController.text}';
                           await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: '+${selectedCountry.phoneCode}${phoneController.text}',
+                            phoneNumber: phoneNumber,
                             verificationCompleted: (PhoneAuthCredential credential) {},
                             verificationFailed: (FirebaseAuthException e) {},
                             codeSent: (String verificationId, int? resendToken) {
-                              RegisterScreen.verify=verificationId;
-                              RegisterScreen.phoneNumber='+${selectedCountry.phoneCode}${phoneController.text}';
-                              Navigator.pushNamed(context, 'otp');
+                              RegisterScreen.phoneNumber=phoneNumber;
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpScreen(phoneNumber: phoneNumber, verify: verificationId),
+                                  ),
+                                );
                             },
                             codeAutoRetrievalTimeout: (String verificationId) {},
                           );

@@ -1,19 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import 'package:sakyahe/screens/register_screen.dart';
+import 'package:sakyahe/screens/home_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final String phoneNumber;
+  final String verify;
+
+  const OtpScreen({Key? key, required this.phoneNumber, required this.verify}) : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-
+  
   String otpCode = "";
   final FirebaseAuth auth = FirebaseAuth.instance;
   @override
@@ -82,15 +86,30 @@ class _OtpScreenState extends State<OtpScreen> {
                     text: "Verify",
                     onPressed: () async {
                       try {
-                        PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: RegisterScreen.verify, smsCode: otpCode);
-
+                        PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: widget.verify, smsCode: otpCode);
+                        
                         // Sign the user in (or link) with the credential
                         await auth.signInWithCredential(credential);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => UserInfoScreen()),
-                          (route) => false,
-                        );
+
+                        final QuerySnapshot result = await FirebaseFirestore.instance
+                              .collection('users')
+                              .where('phoneNumber', isEqualTo: widget.phoneNumber)
+                              .get();
+                        
+                        if (result.docs.isNotEmpty) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            (route) => false,
+                          );
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => UserInfoScreen()),
+                            (route) => false,
+                          );
+                        }
+                        
                       } catch (e) {
                         print("Error wrong otp");
                       }
@@ -98,6 +117,17 @@ class _OtpScreenState extends State<OtpScreen> {
                     },
                   ),
                 ),
+                // const SizedBox(height: 50),
+                // SizedBox(
+                //   width: MediaQuery.of(context).size.width,
+                //   height: 50,
+                //   child: CustomButton(
+                //     text: "Test",
+                //     onPressed: () {
+                //       print(widget.phoneNumber);
+                //     },
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 const Text(
                   "Did not receive a code?",

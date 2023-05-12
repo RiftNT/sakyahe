@@ -3,13 +3,12 @@ import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sakyahe/screens/otp_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
-  static String verify="";
-  static String phoneNumber="";
+  
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -172,8 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               verificationCompleted: (PhoneAuthCredential credential) {},
                               verificationFailed: (FirebaseAuthException e) {},
                               codeSent: (String verificationId, int? resendToken) {
-                                LoginScreen.verify=verificationId;
-                                Navigator.pushNamed(context, 'otp');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpScreen(phoneNumber: phoneNumber, verify: verificationId),
+                                  ),
+                                );
                               },
                               codeAutoRetrievalTimeout: (String verificationId) {},
                             );
