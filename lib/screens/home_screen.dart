@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/screens/welcome_screen.dart';
 
 import '../widgets/custom_button.dart';

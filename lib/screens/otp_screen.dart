@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sakyahe/screens/home_screen.dart';
+import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
 
@@ -99,7 +100,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         if (result.docs.isNotEmpty) {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            MaterialPageRoute(builder: (context) => NavScreen()),
                             (route) => false,
                           );
                         } else {

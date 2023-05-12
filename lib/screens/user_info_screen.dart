@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/home_screen.dart';
@@ -74,7 +75,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
+                              builder: (context) => const NavScreen(),
                             ),
                           );
                         }

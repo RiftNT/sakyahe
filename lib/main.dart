@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sakyahe/screens/home_screen.dart';
 import 'package:sakyahe/screens/login_screen.dart';
+import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/screens/otp_screen.dart';
 import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         'login': (context) => const LoginScreen(),
         'otp': (context) => OtpScreen(phoneNumber: '', verify: ''),
         'uinfo': (context) => const UserInfoScreen(),
-        'home': (context) => const HomeScreen(),
+        'nav': (context) => const NavScreen(),       
       },
     );
   }
