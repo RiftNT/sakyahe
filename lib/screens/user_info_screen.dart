@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/home_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
-  const UserInfoScreen({super.key});
+  const UserInfoScreen({Key? key}) : super(key: key);
 
   @override
   State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
-  // final textController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +26,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: const Icon(Icons.arrow_back),
-                  ),
-                ),
                 const SizedBox(height: 120),
                 const Text(
                   "What should people call you?",
@@ -37,12 +35,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                TextFormField(
-                  // controller: textController,
-                  decoration:
-                      const InputDecoration(labelText: "Enter your name"),
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w500),
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: _nameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                    decoration:
+                        const InputDecoration(labelText: "Enter your name"),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
                 ),
                 const SizedBox(height: 50),
                 SizedBox(
@@ -50,16 +57,24 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   height: 50,
                   child: CustomButton(
                     text: "Submit",
-                    onPressed: () {
-                      // if (otpCode != null) {
-                      //   verifyOtp(context, otpCode!);
-                      // } else {}
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(), //temp only
-                        ),
-                      );
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final user = _auth.currentUser;
+                        if (user != null) {
+                          final name = _nameController.text;
+                          final uid = user.uid;
+                          await _firestore
+                              .collection('users')
+                              .doc(uid)
+                              .set({'name': name});
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        }
+                      }
                     },
                   ),
                 ),

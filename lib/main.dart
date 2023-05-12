@@ -5,34 +5,68 @@ import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
 import 'package:sakyahe/screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // runApp(const MyApp());
-  runApp(MaterialApp(
-    initialRoute: 'welcome',
-    debugShowCheckedModeBanner: false,
-    routes: {
-      'welcome': (context) => WelcomeScreen(),
-      'register': (context) => RegisterScreen(),
-      'otp': (context) => OtpScreen(),
-      'uinfo': (context) => UserInfoScreen(),
-      'home': (context) => HomeScreen()
-    },
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
-      title: "WelcomePage",
+      home: const SplashScreen(),
+      routes: {
+        'welcome': (context) => const WelcomeScreen(),
+        'register': (context) => const RegisterScreen(),
+        'otp': (context) => const OtpScreen(),
+        'uinfo': (context) => const UserInfoScreen(),
+        'home': (context) => const HomeScreen(),
+      },
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    checkAuthState();
+  }
+
+  void checkAuthState() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    if (auth.currentUser != null) {
+      // User is signed in, redirect to HomeScreen
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacementNamed(context, 'home');
+      });
+    } else {
+      // User is not signed in, redirect to WelcomeScreen
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacementNamed(context, 'welcome');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }
