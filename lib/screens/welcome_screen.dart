@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -49,12 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   height: 50,
                   child: CustomButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterScreen(),
-                          ),
-                        );
+                        Navigator.pushNamed(context, 'register');
                       },
                       text: "Get started"),
                 )

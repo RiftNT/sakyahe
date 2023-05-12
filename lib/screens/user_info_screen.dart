@@ -21,6 +21,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
             child: Column(
               children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Icon(Icons.arrow_back),
+                  ),
+                ),
                 const SizedBox(height: 120),
                 const Text(
                   "What should people call you?",

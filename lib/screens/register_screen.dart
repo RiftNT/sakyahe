@@ -6,6 +6,8 @@ import 'package:sakyahe/widgets/custom_button.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
+  static String verify="";
+
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -145,18 +147,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           phoneNumber: '+${selectedCountry.phoneCode}${phoneController.text}',
                           verificationCompleted: (PhoneAuthCredential credential) {},
                           verificationFailed: (FirebaseAuthException e) {},
-                          codeSent: (String verificationId, int? resendToken) {},
+                          codeSent: (String verificationId, int? resendToken) {
+                            RegisterScreen.verify=verificationId;
+                            Navigator.pushNamed(context, 'otp');
+                          },
                           codeAutoRetrievalTimeout: (String verificationId) {},
                         );
                       } catch (e) {
                         print("Error sending OTP: $e");
                       }
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => otp_screen(),
-                    //   ),
-                    // );
+                    // Navigator.pushNamed(context, 'otp');
                   }),
                 )
               ],
