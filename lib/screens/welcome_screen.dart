@@ -42,16 +42,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
-                //custom button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: CustomButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'register');
-                      },
-                      text: "Get started"),
-                )
+                // Register and Login buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        child: CustomButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'register');
+                          },
+                          text: "Register",
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        child: CustomButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'login');
+                          },
+                          text: "Login",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

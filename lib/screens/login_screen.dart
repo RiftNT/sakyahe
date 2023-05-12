@@ -1,26 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   static String verify="";
   static String phoneNumber="";
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
   Country selectedCountry = Country(
     phoneCode: "63",
     countryCode: "PH",
     e164Sc: 0,
-    geographic: true,
+    geographic: false,
     level: 1,
     name: "Philippines",
     example: "Philippines",
@@ -64,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  "Register",
+                  "Login",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -72,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 25),
                 const Text(
-                  "Add your phone number below We will send you a verification code.",
+                  "Enter your phone number below. We will send you a verification code.",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black38,
@@ -154,28 +155,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: CustomButton(text: "Next", 
+                  child: CustomButton(
+                    text: "Next", 
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: '+${selectedCountry.phoneCode}${phoneController.text}',
-                            verificationCompleted: (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {},
-                            codeSent: (String verificationId, int? resendToken) {
-                              RegisterScreen.verify=verificationId;
-                              RegisterScreen.phoneNumber='+${selectedCountry.phoneCode}${phoneController.text}';
-                              Navigator.pushNamed(context, 'otp');
-                            },
-                            codeAutoRetrievalTimeout: (String verificationId) {},
-                          );
+                          final String phoneNumber = '+${selectedCountry.phoneCode}${phoneController.text}';
+                          final QuerySnapshot result = await FirebaseFirestore.instance
+                              .collection('users')
+                              .where('phoneNumber', isEqualTo: phoneNumber)
+                              .get();
+
+                          if (result.docs.isNotEmpty) {
+                            await FirebaseAuth.instance.verifyPhoneNumber(
+                              phoneNumber: phoneNumber,
+                              verificationCompleted: (PhoneAuthCredential credential) {},
+                              verificationFailed: (FirebaseAuthException e) {},
+                              codeSent: (String verificationId, int? resendToken) {
+                                LoginScreen.verify=verificationId;
+                                Navigator.pushNamed(context, 'otp');
+                              },
+                              codeAutoRetrievalTimeout: (String verificationId) {},
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text("This phone number is not registered. Please create an account."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         } catch (e) {
-                          print("Error sending OTP: $e");
+                          print("Error checking phone number: $e");
                         }
                       }
-                    // Navigator.pushNamed(context, 'otp');
-                  }),
-                )
+                    },
+                  ),
+                ),
               ],
             ),
           ),

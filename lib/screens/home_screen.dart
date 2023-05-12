@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sakyahe/screens/welcome_screen.dart';
 
 import '../widgets/custom_button.dart';
 
@@ -49,6 +50,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   },
+                ),
+                const SizedBox(height: 50),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  child: CustomButton(
+                    text: "Logout",
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                        (route) => false,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

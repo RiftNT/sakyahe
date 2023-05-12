@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/home_screen.dart';
 
@@ -45,8 +46,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       }
                       return null;
                     },
-                    decoration:
-                        const InputDecoration(labelText: "Enter your name"),
+                    decoration: const InputDecoration(
+                      labelText: "Enter your name",
+                      hintText: "e.g. Juan Dela Cruz",
+                    ),
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w500),
                   ),
@@ -62,11 +65,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         final user = _auth.currentUser;
                         if (user != null) {
                           final name = _nameController.text;
+                          final phoneNumber = RegisterScreen.phoneNumber;
                           final uid = user.uid;
                           await _firestore
                               .collection('users')
                               .doc(uid)
-                              .set({'name': name});
+                              .set({'name': name, 'phoneNumber': phoneNumber});
                           Navigator.push(
                             context,
                             MaterialPageRoute(

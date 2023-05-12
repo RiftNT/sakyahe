@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sakyahe/screens/home_screen.dart';
+import 'package:sakyahe/screens/login_screen.dart';
 import 'package:sakyahe/screens/otp_screen.dart';
 import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'welcome': (context) => const WelcomeScreen(),
         'register': (context) => const RegisterScreen(),
+        'login': (context) => const LoginScreen(),
         'otp': (context) => const OtpScreen(),
         'uinfo': (context) => const UserInfoScreen(),
         'home': (context) => const HomeScreen(),
