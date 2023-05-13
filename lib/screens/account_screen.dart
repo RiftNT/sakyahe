@@ -167,23 +167,16 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Account',
-      home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: AppBar(
-            title: const Text('Account'),
-          ),
-        ),
+    return Scaffold(
+        appBar: AppBar(
+        title: const Text('Account'),
+      ),
         body: ListView(
           children: [
             profileSection,
             pagesSection,
           ],
         ),
-      ),
-    );
+      );
   }
 }

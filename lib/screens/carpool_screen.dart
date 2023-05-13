@@ -13,35 +13,33 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
     Widget PinLocation = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
+        SizedBox(height: 30),
         Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: 100), //di sad mugana ang padding sa left n right
-        ),
-        TextField(
-          style: TextStyle(fontSize: 15),
-          decoration: InputDecoration(
-              hintText: 'Pick-up',
-              // labelText: 'Pick-up',
-              isDense: true,
-              // isCollapsed: true,
-              filled: true,
-              fillColor: Colors.black12,
-              suffixIcon: Icon(Icons.push_pin),
-              border: OutlineInputBorder()),
-          //for some reasaon di mu gana ang border radius para circular ang sides
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: TextField(
+            style: TextStyle(fontSize: 15),
+            decoration: InputDecoration(
+                hintText: 'Pick-up',
+                isDense: true,
+                filled: true,
+                fillColor: Colors.black12,
+                suffixIcon: Icon(Icons.push_pin),
+                border: OutlineInputBorder()),
+          ),
         ),
         SizedBox(height: 10),
-        TextField(
-          style: TextStyle(fontSize: 15),
-          decoration: InputDecoration(
-            isDense: true,
-            hintText: 'Destination',
-            // labelText: 'Destination',
-            filled: true,
-            fillColor: Colors.black12,
-            suffixIcon: Icon(Icons.location_pin),
-            border: OutlineInputBorder(),
-            //for some reasaon di mu gana ang border radius para circular ang sides
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: TextField(
+            style: TextStyle(fontSize: 15),
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: 'Destination',
+              filled: true,
+              fillColor: Colors.black12,
+              suffixIcon: Icon(Icons.location_pin),
+              border: OutlineInputBorder(),
+            ),
           ),
         ),
         SizedBox(height: 20),
@@ -53,11 +51,14 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
           endIndent: 15,
         ),
         SizedBox(height: 15),
-        Text(
-          'NEAR YOU',
-          style: TextStyle(
-            fontSize: 27,
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            'NEAR YOU',
+            style: TextStyle(
+              fontSize: 27,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -115,7 +116,7 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
                 },
                 child: const ListTile(
                   title: Text('Carpool Group 4'),
-                  subtitle: Text('Babag - USC DC | APRIL 30, 2023 - 8:00 AM'),
+                  subtitle: Text('Babag - USC DC | APRIL 30, 2023 - 8:30 AM'),
                   textColor: Colors.black,
                   trailing: Icon(Icons.people),
                   tileColor: Colors.black12,
@@ -126,11 +127,16 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
         ],
       ),
     );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: ListView(
-          children: [PinLocation, CarpoolGroups],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Carpool'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            PinLocation,
+            CarpoolGroups,
+          ],
         ),
       ),
     );
