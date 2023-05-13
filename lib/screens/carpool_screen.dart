@@ -1,31 +1,136 @@
 import 'package:flutter/material.dart';
 
-class CarpoolScreen extends StatelessWidget {
-  const CarpoolScreen({Key? key}) : super(key: key);
+class CarpoolScreen extends StatefulWidget {
+  const CarpoolScreen({super.key});
 
   @override
+  State<CarpoolScreen> createState() => _CarpoolScreenState();
+}
+
+class _CarpoolScreenState extends State<CarpoolScreen> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Carpool'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.pages,
-              size: 80,
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Carpool',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+    Widget PinLocation = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: 100), //di sad mugana ang padding sa left n right
+        ),
+        TextField(
+          style: TextStyle(fontSize: 15),
+          decoration: InputDecoration(
+              hintText: 'Pick-up',
+              // labelText: 'Pick-up',
+              isDense: true,
+              // isCollapsed: true,
+              filled: true,
+              fillColor: Colors.black12,
+              suffixIcon: Icon(Icons.push_pin),
+              border: OutlineInputBorder()),
+          //for some reasaon di mu gana ang border radius para circular ang sides
+        ),
+        SizedBox(height: 10),
+        TextField(
+          style: TextStyle(fontSize: 15),
+          decoration: InputDecoration(
+            isDense: true,
+            hintText: 'Destination',
+            // labelText: 'Destination',
+            filled: true,
+            fillColor: Colors.black12,
+            suffixIcon: Icon(Icons.location_pin),
+            border: OutlineInputBorder(),
+            //for some reasaon di mu gana ang border radius para circular ang sides
+          ),
+        ),
+        SizedBox(height: 20),
+        Divider(
+          color: Colors.black,
+          height: 30,
+          thickness: 1,
+          indent: 15,
+          endIndent: 15,
+        ),
+        SizedBox(height: 15),
+        Text(
+          'NEAR YOU',
+          style: TextStyle(
+            fontSize: 27,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+    Widget CarpoolGroups = Container(
+      padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+      child: Column(
+        children: [
+          ListView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            children: [
+              InkWell(
+                onTap: () {
+                  // Carpool 1
+                },
+                child: const ListTile(
+                  title: Text('Carpool Group 1'),
+                  subtitle: Text('Cordova - USC TC | APRIL 30, 2023 - 8:00 AM'),
+                  textColor: Colors.black,
+                  trailing: Icon(Icons.people),
+                  tileColor: Colors.black12,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 5),
+              InkWell(
+                onTap: () {
+                  // Carpool 2
+                },
+                child: const ListTile(
+                  title: Text('Carpool Group 2'),
+                  subtitle: Text('Looc - USC TC | APRIL 30, 2023 - 8:00 AM'),
+                  textColor: Colors.black,
+                  trailing: Icon(Icons.people),
+                  tileColor: Colors.black12,
+                ),
+              ),
+              const SizedBox(height: 5),
+              InkWell(
+                onTap: () {
+                  // Carpool 3
+                },
+                child: const ListTile(
+                  title: Text('Carpool Group 3'),
+                  subtitle: Text('Basak - USC TC | APRIL 30, 2023 - 8:00 AM'),
+                  textColor: Colors.black,
+                  trailing: Icon(Icons.people),
+                  tileColor: Colors.black12,
+                ),
+              ),
+              const SizedBox(height: 5),
+              InkWell(
+                onTap: () {
+                  // Carpool 4
+                },
+                child: const ListTile(
+                  title: Text('Carpool Group 4'),
+                  subtitle: Text('Babag - USC DC | APRIL 30, 2023 - 8:00 AM'),
+                  textColor: Colors.black,
+                  trailing: Icon(Icons.people),
+                  tileColor: Colors.black12,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: ListView(
+          children: [PinLocation, CarpoolGroups],
         ),
       ),
     );
