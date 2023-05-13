@@ -3,6 +3,7 @@ import 'package:sakyahe/screens/home_screen.dart';
 import 'package:sakyahe/screens/login_screen.dart';
 import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/screens/otp_screen.dart';
+import 'package:sakyahe/screens/profile_screen.dart';
 import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
 import 'package:sakyahe/screens/welcome_screen.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
         'login': (context) => const LoginScreen(),
         'otp': (context) => OtpScreen(phoneNumber: '', verify: ''),
         'uinfo': (context) => const UserInfoScreen(),
-        'nav': (context) => const NavScreen(),       
+        'nav': (context) => const NavScreen(),
+        'profile': (context) => const ProfileScreen(),
       },
     );
   }

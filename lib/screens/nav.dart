@@ -43,7 +43,7 @@ class _NavScreenState extends State<NavScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.car_repair),
+            icon: Icon(Icons.drive_eta_outlined),
             label: 'Carpool',
           ),
           BottomNavigationBarItem(
