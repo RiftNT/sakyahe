@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (auth.currentUser != null) {
       // User is signed in, redirect to HomeScreen
       Future.delayed(Duration.zero, () {
-        Navigator.pushReplacementNamed(context, 'home');
+        Navigator.pushReplacementNamed(context, 'nav');
       });
     } else {
       // User is not signed in, redirect to WelcomeScreen
