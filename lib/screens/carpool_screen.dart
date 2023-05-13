@@ -74,6 +74,12 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
               InkWell(
                 onTap: () {
                   // Carpool 1
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CarpoolScreen2(),
+                    ),
+                  );
                 },
                 child: const ListTile(
                   title: Text('Carpool Group 1'),
