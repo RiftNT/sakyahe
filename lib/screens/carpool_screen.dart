@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sakyahe/screens/carpool_screen_2.dart';
+import 'package:sakyahe/screens/driver_carpool_screen.dart';
+
+import 'driver_create_carpool_screen.dart';
 
 class CarpoolScreen extends StatefulWidget {
   const CarpoolScreen({super.key});
@@ -93,7 +96,12 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
               const SizedBox(height: 5),
               InkWell(
                 onTap: () {
-                  // Carpool 2
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateCarpoolScreen(),
+                    ),
+                  );
                 },
                 child: const ListTile(
                   title: Text('Carpool Group 2'),

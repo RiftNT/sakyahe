@@ -169,7 +169,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               ],
             ),
             const SizedBox(height: 10),
-            const Text('₱50.00 per head')
+            const Text('₱50/person')
           ],
         ),
       ),
