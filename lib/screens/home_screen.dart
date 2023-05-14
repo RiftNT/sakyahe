@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/screens/welcome_screen.dart';
 
 import '../widgets/custom_button.dart';
@@ -58,6 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 50,
                   child: CustomButton(
                     text: "Logout",
+                    bgColor: Colors.blue,
+                    textColor: Colors.white,
                     onPressed: () async {
                       await FirebaseAuth.instance.signOut();
                       Navigator.pushAndRemoveUntil(

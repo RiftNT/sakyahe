@@ -155,7 +155,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: CustomButton(text: "Next", 
+                  child: CustomButton(
+                    text: "Next", 
+                    bgColor: Colors.blue,
+                    textColor: Colors.white,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {

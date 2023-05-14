@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
+import '../widgets/custom_icontext.dart';
+
 class CarpoolScreen2 extends StatefulWidget {
   const CarpoolScreen2({super.key});
 
@@ -9,6 +11,29 @@ class CarpoolScreen2 extends StatefulWidget {
 }
 
 class _CarpoolScreen2State extends State<CarpoolScreen2> {
+  bool isJoined = false;
+
+  void _toggleJoinGroup() {
+    setState(() {
+      isJoined = !isJoined;
+    });
+  }
+
+  Widget _buildChatButton() {
+    if (isJoined) {
+      return CustomButton(
+        text: 'Chat',
+        bgColor: Colors.blue,
+        onPressed: () {
+          // chat page
+        },
+        textColor: Colors.white,
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget PinLocation = Column(
@@ -63,13 +88,6 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
           size: 150,
           color: Colors.grey,
         ),
-        Text(
-          'CARPOOL GROUP 1',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         SizedBox(height: 5),
         Icon(
           //dako mukuha ug spacing, di mapadako ang width
@@ -88,62 +106,90 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
       ],
     );
 
-    Widget GroupDetails = Column(
-      //kani idk na 
-      children: [
-        Container(
-          child: Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 50,
-                  child: CustomButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '');
-                    },
-                    text: "₱ 50      |     Join Group ",
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Stack(
-                  alignment: Alignment.centerLeft,
-                  children: const [
-                    Text(
-                      'Juan Dela Cruz3',
-                      style: TextStyle(
-                        fontSize: 17,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'Juan Dela Cruz4',
-                      style: TextStyle(
-                        fontSize: 17,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    Widget groupDetails = Container(
+      margin: const EdgeInsets.only(top: 15),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 5,
+            offset: Offset(2, 2),
           ),
-        ),
-      ],
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Carpool Page 2'),
+        ],
       ),
-      body: SingleChildScrollView(
+      child: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PinLocation,
-            MapImageAndGroupName,
-            GroupDetails,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'CARPOOL GROUP 1',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ), 
+                _buildChatButton(),
+              ]
+            ),
+            
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomIconText(
+                  icon: Icons.person,
+                  text: '3/4',
+                ),
+                CustomIconText(
+                  icon: Icons.calendar_today,
+                  text: 'June 15, 2023',
+                ),
+                CustomIconText(
+                  icon: Icons.access_time,
+                  text: '8:00 AM',
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomIconText(
+                  icon: Icons.money, 
+                  text: 'GAH 1234'
+                ),
+                CustomIconText(icon: Icons.format_paint_outlined, text: 'White'),
+                CustomIconText(icon: Icons.drive_eta, text: 'Toyota'),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Text('₱50.00 per head')
           ],
         ),
+      ),
+    );
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Carpool Details'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          PinLocation,
+          MapImageAndGroupName,
+          groupDetails,
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _toggleJoinGroup,
+        backgroundColor: isJoined ? Colors.red : Colors.green,
+        child: isJoined ? const Text('Leave') : const Text('Join'),
       ),
     );
   }

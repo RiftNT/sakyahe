@@ -85,6 +85,8 @@ class _OtpScreenState extends State<OtpScreen> {
                   height: 50,
                   child: CustomButton(
                     text: "Verify",
+                    bgColor: Colors.blue,
+                    textColor: Colors.white,
                     onPressed: () async {
                       try {
                         PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: widget.verify, smsCode: otpCode);

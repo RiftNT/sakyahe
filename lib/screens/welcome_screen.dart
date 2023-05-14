@@ -49,6 +49,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       child: SizedBox(
                         height: 50,
                         child: CustomButton(
+                          bgColor: Colors.blue,
+                          textColor: Colors.white,
                           onPressed: () {
                             Navigator.pushNamed(context, 'register');
                           },
@@ -65,6 +67,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Navigator.pushNamed(context, 'login');
                           },
                           text: "Login",
+                          bgColor: Colors.blue,
+                          textColor: Colors.white,
                         ),
                       ),
                     ),

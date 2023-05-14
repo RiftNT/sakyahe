@@ -1,19 +1,28 @@
-// import 'package:flutter/src/widgets/framework.dart';
-// import 'package:flutter/src/widgets/placeholder.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
-  const CustomButton({super.key, required this.text, required this.onPressed});
+  final Color bgColor;
+  final Color textColor;
+  
+  const CustomButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    required this.bgColor,
+    required this.textColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+        foregroundColor: MaterialStateProperty.all<Color>(textColor),
+        backgroundColor: MaterialStateProperty.all<Color>(bgColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0),

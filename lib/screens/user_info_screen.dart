@@ -61,6 +61,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   height: 50,
                   child: CustomButton(
                     text: "Submit",
+                    bgColor: Colors.blue,
+                    textColor: Colors.white,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         final user = _auth.currentUser;
@@ -71,7 +73,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           await _firestore
                               .collection('users')
                               .doc(uid)
-                              .set({'name': name, 'phoneNumber': phoneNumber});
+                              .set({
+                                'name': name, 
+                                'phoneNumber': phoneNumber, 
+                                'type': 'student'
+                              });
                           Navigator.push(
                             context,
                             MaterialPageRoute(
