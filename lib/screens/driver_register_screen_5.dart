@@ -11,7 +11,7 @@ class DriverRegisterScreen5 extends StatefulWidget {
 class _DriverRegisterScreen5State extends State<DriverRegisterScreen5> {
   @override
   Widget build(BuildContext context) {
-    Widget ScanFace = Container(
+    Widget Verification = Container(
       padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +68,7 @@ class _DriverRegisterScreen5State extends State<DriverRegisterScreen5> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [ScanFace],
+          children: [Verification],
         ),
       ),
     );
