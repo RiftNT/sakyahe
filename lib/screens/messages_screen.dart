@@ -170,6 +170,8 @@ class MessagesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Messages'),
+        backgroundColor: Colors.blueAccent[700],
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(

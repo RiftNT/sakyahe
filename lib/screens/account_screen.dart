@@ -170,6 +170,8 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
         appBar: AppBar(
         title: const Text('Account'),
+        backgroundColor: Colors.blueAccent[700],
+        automaticallyImplyLeading: false,
       ),
         body: ListView(
           children: [

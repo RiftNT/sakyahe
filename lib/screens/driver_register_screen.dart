@@ -280,6 +280,8 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
             width: MediaQuery.of(context).size.width,
             height: 50,
             child: CustomButton(
+              bgColor: Colors.blue,
+              textColor: Colors.white,
               text: "Next",
               onPressed: () {
                 Navigator.push(
@@ -289,7 +291,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                         const DriverRegisterScreen2(), //temp only
                   ),
                 );
-              },
+              }, 
             ),
           ),
         ],
@@ -299,6 +301,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Driver Registration'),
+        backgroundColor: Colors.blueAccent[700],
       ),
       body: SingleChildScrollView(
         child: Column(

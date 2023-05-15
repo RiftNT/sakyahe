@@ -193,6 +193,8 @@ class _DriverRegisterScreen3State extends State<DriverRegisterScreen3> {
             width: MediaQuery.of(context).size.width,
             height: 50,
             child: CustomButton(
+              bgColor: Colors.blue,
+              textColor: Colors.white,
               text: "Next",
               onPressed: () {
                 Navigator.push(
@@ -212,6 +214,7 @@ class _DriverRegisterScreen3State extends State<DriverRegisterScreen3> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Driver Registration Page 3'),
+        backgroundColor: Colors.blueAccent[700],
       ),
       body: SingleChildScrollView(
         child: Column(

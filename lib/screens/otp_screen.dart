@@ -7,18 +7,20 @@ import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
 
+import 'navDriver.dart';
+
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
   final String verify;
 
-  const OtpScreen({Key? key, required this.phoneNumber, required this.verify}) : super(key: key);
+  const OtpScreen({Key? key, required this.phoneNumber, required this.verify})
+      : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  
   String otpCode = "";
   final FirebaseAuth auth = FirebaseAuth.instance;
   @override
@@ -89,34 +91,49 @@ class _OtpScreenState extends State<OtpScreen> {
                     textColor: Colors.white,
                     onPressed: () async {
                       try {
-                        PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: widget.verify, smsCode: otpCode);
-                        
-                        // Sign the user in (or link) with the credential
+                        PhoneAuthCredential credential =
+                            PhoneAuthProvider.credential(
+                                verificationId: widget.verify,
+                                smsCode: otpCode);
+
                         await auth.signInWithCredential(credential);
 
-                        final QuerySnapshot result = await FirebaseFirestore.instance
-                              .collection('users')
-                              .where('phoneNumber', isEqualTo: widget.phoneNumber)
-                              .get();
-                        
+                        final QuerySnapshot result = await FirebaseFirestore
+                            .instance
+                            .collection('users')
+                            .where('phoneNumber', isEqualTo: widget.phoneNumber)
+                            .get();
+
                         if (result.docs.isNotEmpty) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => NavScreen()),
-                            (route) => false,
-                          );
+                          final user = result.docs.first;
+                          final userType = user.get('type');
+
+                          if (userType == 'student') {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NavScreen()),
+                              (route) => false,
+                            );
+                          } else if (userType == 'driver') {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NavDriverScreen()),
+                              (route) => false,
+                            );
+                          }
                         } else {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => UserInfoScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => UserInfoScreen()),
                             (route) => false,
                           );
                         }
-                        
                       } catch (e) {
-                        print("Error wrong otp");
+                        print("Error wrong otp: $e");
                       }
-                      
                     },
                   ),
                 ),
@@ -154,6 +171,4 @@ class _OtpScreenState extends State<OtpScreen> {
       ),
     );
   }
-
-  // void verifyOtp(BuildContext context, String userOtp) {}
 }

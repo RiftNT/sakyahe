@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sakyahe/screens/welcome_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
 class DriverRegisterScreen5 extends StatefulWidget {
@@ -46,15 +47,17 @@ class _DriverRegisterScreen5State extends State<DriverRegisterScreen5> {
             width: MediaQuery.of(context).size.width,
             height: 50,
             child: CustomButton(
+              bgColor: Colors.blue,
+              textColor: Colors.white,
               text: "Done",
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         const Home(), //temp only
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const WelcomeScreen(), //temp only
+                  ),
+                );
               },
             ),
           ),
@@ -65,6 +68,7 @@ class _DriverRegisterScreen5State extends State<DriverRegisterScreen5> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Driver Registration Page 5'),
+        backgroundColor: Colors.blueAccent[700],
       ),
       body: SingleChildScrollView(
         child: Column(

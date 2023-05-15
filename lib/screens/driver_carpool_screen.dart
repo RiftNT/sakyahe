@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sakyahe/screens/driver_carpool_screen2.dart';
 import 'package:sakyahe/screens/driver_create_carpool_screen.dart';
 
 class DriverCarpoolScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carpool'),
+        backgroundColor: Colors.blueAccent[700],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,39 +66,50 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                     ],
                   ),
                 ),
-                Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 20),
-                    title: const Text('JDC Carpool'),
-                    subtitle: const Text('Cordova - USC TC'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text('June 15, 2023'),
-                            Text('7:30 AM'),
-                            Text('₱50/person'),
-                          ],
-                        ),
-                        SizedBox(width: 30),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          color: Colors.grey[200],
-                          child: Row(
+                InkWell(
+                  onTap: () {
+                    // Carpool 1
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DriverCarpoolScreen2(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 20),
+                      title: const Text('JDC Carpool'),
+                      subtitle: const Text('Cordova - USC TC'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Icon(Icons.people),
-                              SizedBox(width: 5),
-                              Text('3/4'),
+                              Text('June 15, 2023'),
+                              Text('7:30 AM'),
+                              Text('₱50/person'),
                             ],
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 30),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            color: Colors.grey[200],
+                            child: Row(
+                              children: const [
+                                Icon(Icons.people),
+                                SizedBox(width: 5),
+                                Text('3/4'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

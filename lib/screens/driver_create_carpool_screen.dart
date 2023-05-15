@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:sakyahe/screens/driver_carpool_screen.dart';
 
@@ -18,33 +19,11 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   CarpoolRoute? _selectedRoute;
+  TextEditingController _pickupLocationController = TextEditingController();
+  TextEditingController _dropoffLocationController = TextEditingController();
 
-  void _showDatePicker() async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
-
-  void _showTimePicker() async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (pickedTime != null && pickedTime != _selectedTime) {
-      setState(() {
-        _selectedTime = pickedTime;
-      });
-    }
+  Future<List<String>> _fetchLocations(String query) async {
+    return ['Basak', 'Cordova', 'USC-TC', 'USC-Main'];
   }
 
   @override
@@ -52,6 +31,7 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Carpool Group'),
+        backgroundColor: Colors.blueAccent[700],
       ),
       body: Column(
         children: [
@@ -132,43 +112,108 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
                         },
                         child: const Text('Select Time'),
                       ),
+                      Text(
+                        _selectedDate == null || _selectedTime == null
+                            ? ''
+                            : DateFormat('MMM d, yyyy hh:mm a').format(DateTime(
+                                _selectedDate!.year,
+                                _selectedDate!.month,
+                                _selectedDate!.day,
+                                _selectedTime!.hour,
+                                _selectedTime!.minute)),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Set Pick-Up and Drop-Off',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                  const Text(
+                    'Pickup and Dropoff Locations',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  TypeAheadFormField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      decoration: const InputDecoration(
+                        hintText: 'Enter pickup location',
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: _pickupLocationController,
+                    ),
+                    suggestionsCallback: (query) async {
+                      return await _fetchLocations(query);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      _pickupLocationController.text = suggestion;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TypeAheadFormField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      decoration: const InputDecoration(
+                        hintText: 'Enter dropoff location',
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: _dropoffLocationController,
+                    ),
+                    suggestionsCallback: (query) async {
+                      return await _fetchLocations(query);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      _dropoffLocationController.text = suggestion;
+                    },
+                  ),
                 ],
               ),
             ),
           ),
-          // Footer
-          Container(
-            width: double.infinity,
-            height: 60,
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DriverCarpoolScreen(),
-                  ),
-                );
-              },
-              child: const Text(
-                'Create Carpool Group',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DriverCarpoolScreen(),
+                ),
+              );
+            },
+            child: const Text('Create Carpool Group'),
           ),
         ],
       ),
     );
+  }
+
+  void _showDatePicker() async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  void _showTimePicker() async {
+    TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
   }
 }

@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("SAKYAHE"),
         elevation: 0,
         backgroundColor: Colors.blueAccent[700],
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Column(
@@ -81,17 +82,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   )),
                   //map
                   Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 100.0,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20.0),
-                        padding: EdgeInsets.symmetric(horizontal: 20.0),
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            borderRadius: BorderRadius.circular(20)),
-                      )),
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 100.0,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/map.png"),
+                            fit: BoxFit.cover,
+                          ),
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -198,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      
     );
   }
 }

@@ -99,7 +99,7 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CreateCarpoolScreen(),
+                      builder: (context) => const DriverCarpoolScreen(),
                     ),
                   );
                 },
@@ -145,6 +145,8 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carpool'),
+        backgroundColor: Colors.blueAccent[700],
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -4,14 +4,14 @@ import 'package:sakyahe/widgets/custom_button.dart';
 
 import '../widgets/custom_icontext.dart';
 
-class CarpoolScreen2 extends StatefulWidget {
-  const CarpoolScreen2({super.key});
+class DriverCarpoolScreen2 extends StatefulWidget {
+  const DriverCarpoolScreen2({super.key});
 
   @override
-  State<CarpoolScreen2> createState() => _CarpoolScreen2State();
+  State<DriverCarpoolScreen2> createState() => _DriverCarpoolScreen2State();
 }
 
-class _CarpoolScreen2State extends State<CarpoolScreen2> {
+class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
   bool isJoined = false;
 
   void _toggleJoinGroup() {
@@ -19,26 +19,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
       isJoined = !isJoined;
     });
   }
-
-  Widget _buildChatButton() {
-    if (isJoined) {
-      return CustomButton(
-        text: 'Chat',
-        bgColor: Colors.blue,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ChatScreen(),
-            ),
-          );
-        },
-        textColor: Colors.white,
-      );
-    } else {
-      return Container();
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +31,9 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: TextField(
             style: TextStyle(fontSize: 15),
+            enabled: false,
             decoration: InputDecoration(
-                hintText: 'Pick-up',
+                hintText: 'Cordova',
                 isDense: true,
                 filled: true,
                 fillColor: Colors.black12,
@@ -66,7 +48,8 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
             style: TextStyle(fontSize: 15),
             decoration: InputDecoration(
               isDense: true,
-              hintText: 'Destination',
+              hintText: 'USC-TC',
+              enabled: false,
               filled: true,
               fillColor: Colors.black12,
               suffixIcon: Icon(Icons.location_pin),
@@ -99,21 +82,6 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               ),
               borderRadius: BorderRadius.circular(20)),
         ),
-        const SizedBox(height: 5),
-        const Icon(
-          //dako mukuha ug spacing, di mapadako ang width
-          Icons.circle,
-          size: 80,
-          color: Colors.black12,
-        ),
-        const SizedBox(height: 5),
-        const Text(
-          'Juan Dela Cruz',
-          style: TextStyle(
-            fontSize: 17,
-            // fontWeight: FontWeight.bold,
-          ),
-        ),
       ],
     );
 
@@ -135,15 +103,14 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const Text(
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+              Text(
                 'CARPOOL GROUP 1',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              _buildChatButton(),
             ]),
             const SizedBox(height: 10),
             Row(
@@ -174,7 +141,31 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               ],
             ),
             const SizedBox(height: 10),
-            const Text('₱50/person')
+            const Text('₱50/person'),
+            ExpansionTile(
+              title: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Group members:',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              leading: Icon(Icons.group),
+              children: [
+                CustomIconText(
+                  icon: Icons.person,
+                  text: 'Juan Dela Cruz',
+                ),
+                CustomIconText(
+                  icon: Icons.person,
+                  text: 'Maria Clara',
+                ),
+                CustomIconText(
+                  icon: Icons.person,
+                  text: 'Pedro Parker',
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -190,12 +181,15 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
           PinLocation,
           MapImageAndGroupName,
           groupDetails,
+          CustomButton(
+            bgColor: isJoined ? Colors.green.shade700 : Colors.yellow.shade700,
+            onPressed: _toggleJoinGroup,
+            text: isJoined ? 'En route to Destination' : 'Picking-up Passengers',
+            textColor: Colors.white,
+          ),
+          
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toggleJoinGroup,
-        backgroundColor: isJoined ? Colors.red : Colors.green,
-        child: isJoined ? const Text('Leave') : const Text('Join'),
+        
       ),
     );
   }

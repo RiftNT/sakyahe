@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sakyahe/screens/driver_register_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
+
+import '../widgets/custom_icontext.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -77,25 +80,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const SizedBox(height: 40),
                 GestureDetector(
                   onTap: () {
-                    // redirect to driver form page
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.drive_eta,
-                        color: Colors.black54,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "Work as Driver",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+                    Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const DriverRegisterScreen(), //temp only
                   ),
+                );
+                  },
+
+                  child: CustomIconText(
+                    icon: Icons.drive_eta,
+                    text: 'Work as Driver',
+                  )
                 ),
               ],
             ),
