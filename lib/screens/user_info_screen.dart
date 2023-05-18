@@ -74,8 +74,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               .collection('users')
                               .doc(uid)
                               .set({
-                                'name': name, 
-                                'phoneNumber': phoneNumber, 
+                                'uid': uid.toString(),
+                                'name': name,
+                                'phoneNumber': phoneNumber,
                                 'type': 'student'
                               });
                           Navigator.push(

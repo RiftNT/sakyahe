@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sakyahe/screens/driver_carpool_screen.dart';
 
 enum CarpoolRoute {
@@ -19,6 +21,7 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   CarpoolRoute? _selectedRoute;
+  TextEditingController _carpoolGroupNameController = TextEditingController();
   TextEditingController _pickupLocationController = TextEditingController();
   TextEditingController _dropoffLocationController = TextEditingController();
 
@@ -47,6 +50,7 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    controller: _carpoolGroupNameController,
                     decoration: const InputDecoration(
                       hintText: 'Enter carpool group name',
                       border: OutlineInputBorder(),
@@ -112,15 +116,20 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
                         },
                         child: const Text('Select Time'),
                       ),
-                      Text(
-                        _selectedDate == null || _selectedTime == null
-                            ? ''
-                            : DateFormat('MMM d, yyyy hh:mm a').format(DateTime(
-                                _selectedDate!.year,
-                                _selectedDate!.month,
-                                _selectedDate!.day,
-                                _selectedTime!.hour,
-                                _selectedTime!.minute)),
+                      Expanded(
+                        // Add this Expanded widget
+                        child: Text(
+                          _selectedDate == null || _selectedTime == null
+                              ? ''
+                              : DateFormat('MMM d, yyyy hh:mm a').format(
+                                  DateTime(
+                                      _selectedDate!.year,
+                                      _selectedDate!.month,
+                                      _selectedDate!.day,
+                                      _selectedTime!.hour,
+                                      _selectedTime!.minute)),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   ),
@@ -176,14 +185,7 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DriverCarpoolScreen(),
-                ),
-              );
-            },
+            onPressed: _createCarpoolGroup,
             child: const Text('Create Carpool Group'),
           ),
         ],
@@ -215,5 +217,79 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
         _selectedTime = picked;
       });
     }
+  }
+
+  void _createCarpoolGroup() async {
+    // Get the inputted values
+    String carpoolGroupName = _carpoolGroupNameController.text;
+    String pickupLocation = _pickupLocationController.text;
+    String dropoffLocation = _dropoffLocationController.text;
+
+    // Check if all the forms are filled
+    if (carpoolGroupName.isEmpty ||
+        _selectedRoute == null ||
+        _selectedDate == null ||
+        _selectedTime == null ||
+        pickupLocation.isEmpty ||
+        dropoffLocation.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Form Incomplete'),
+          content: const Text('Please fill in all the fields.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Get the current user's ID
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    // Create a new document reference in the "carpool_group" collection
+    CollectionReference carpoolGroupCollection =
+        FirebaseFirestore.instance.collection('carpool_group');
+    DocumentReference newCarpoolGroupRef = carpoolGroupCollection.doc();
+
+    // Create a new document reference in the "carpool_details" collection
+    CollectionReference carpoolDetailsCollection =
+        FirebaseFirestore.instance.collection('carpool_details');
+    DocumentReference newCarpoolDetailsRef = carpoolDetailsCollection.doc();
+
+    // Build the data to be stored in Firestore
+    Map<String, dynamic> carpoolGroupData = {
+      'groupID': newCarpoolGroupRef.id,
+      'studentUIDs': [],
+      'driverUID': currentUserId,
+      'carpooldetailsID': newCarpoolDetailsRef.id,
+    };
+
+    Map<String, dynamic> carpoolDetailsData = {
+      'carpooldetailsID': newCarpoolDetailsRef.id,
+      'name': carpoolGroupName,
+      'route':
+          _selectedRoute == CarpoolRoute.toSchool ? 'to school' : 'from school',
+      'date': _selectedDate,
+      'time': _selectedTime.toString(), // Convert TimeOfDay to string
+      'pickupLocation': pickupLocation,
+      'dropoffLocation': dropoffLocation,
+    };
+
+    // Store the data in Firestore
+    await newCarpoolGroupRef.set(carpoolGroupData);
+    await newCarpoolDetailsRef.set(carpoolDetailsData);
+
+    // Navigate to the driver carpool screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DriverCarpoolScreen(),
+      ),
+    );
   }
 }
