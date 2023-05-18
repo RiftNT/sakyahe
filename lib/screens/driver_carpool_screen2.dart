@@ -17,19 +17,18 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
   bool isArrived = false;
 
   void _toggleJoinGroup() {
-  setState(() {
-    if (!isJoined && !isArrived) {
-      isJoined = true;
-      buttonText = 'Picking-up Passengers';
-    } else if (buttonText == 'Picking-up Passengers') {
-      buttonText = 'En route to Destination';
-    } else if (buttonText == 'En route to Destination') {
-      buttonText = 'Arrived';
-      isArrived = true;
-    }
-  });
-}
-
+    setState(() {
+      if (!isJoined && !isArrived) {
+        isJoined = true;
+        buttonText = 'Picking-up Passengers';
+      } else if (buttonText == 'Picking-up Passengers') {
+        buttonText = 'En route to Destination';
+      } else if (buttonText == 'En route to Destination') {
+        buttonText = 'Arrived';
+        isArrived = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,9 +199,22 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
           groupDetails,
           const SizedBox(height: 20),
           CustomButton(
-            bgColor: isArrived ? Colors.red : buttonText == 'Picking-up Passengers' ? Colors.yellow.shade800 : buttonText == 'En route to Destination' ? Colors.green.shade700 : Colors.grey.shade700,
+            bgColor: isArrived
+                ? Colors.red
+                : buttonText == 'Picking-up Passengers'
+                    ? Colors.yellow.shade800
+                    : buttonText == 'En route to Destination'
+                        ? Colors.green.shade700
+                        : Colors.grey.shade700,
             onPressed: isArrived ? () {} : () => _toggleJoinGroup(),
             text: buttonText,
+            textColor: Colors.white,
+          ),
+          const SizedBox(height: 10),
+          CustomButton(
+            bgColor: Colors.red,
+            onPressed: () {},
+            text: 'Delete Carpool Group',
             textColor: Colors.white,
           ),
         ],
