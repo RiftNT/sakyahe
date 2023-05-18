@@ -5,21 +5,31 @@ import 'package:sakyahe/widgets/custom_button.dart';
 import '../widgets/custom_icontext.dart';
 
 class DriverCarpoolScreen2 extends StatefulWidget {
-  const DriverCarpoolScreen2({super.key});
+  const DriverCarpoolScreen2({Key? key}) : super(key: key);
 
   @override
   State<DriverCarpoolScreen2> createState() => _DriverCarpoolScreen2State();
 }
 
 class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
+  String buttonText = 'Begin Carpool';
   bool isJoined = false;
+  bool isArrived = false;
 
   void _toggleJoinGroup() {
-    setState(() {
-      isJoined = !isJoined;
-    });
-  }
-  
+  setState(() {
+    if (!isJoined && !isArrived) {
+      isJoined = true;
+      buttonText = 'Picking-up Passengers';
+    } else if (buttonText == 'Picking-up Passengers') {
+      buttonText = 'En route to Destination';
+    } else if (buttonText == 'En route to Destination') {
+      buttonText = 'Arrived';
+      isArrived = true;
+    }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +43,13 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
             style: TextStyle(fontSize: 15),
             enabled: false,
             decoration: InputDecoration(
-                hintText: 'Cordova',
-                isDense: true,
-                filled: true,
-                fillColor: Colors.black12,
-                suffixIcon: Icon(Icons.push_pin),
-                border: OutlineInputBorder()),
+              hintText: 'Cordova',
+              isDense: true,
+              filled: true,
+              fillColor: Colors.black12,
+              suffixIcon: Icon(Icons.push_pin),
+              border: OutlineInputBorder(),
+            ),
           ),
         ),
         SizedBox(height: 10),
@@ -60,7 +71,6 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
         SizedBox(height: 20),
         Divider(
           color: Colors.black,
-          // height: 30,
           thickness: 1,
           indent: 15,
           endIndent: 15,
@@ -76,11 +86,12 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
           margin: EdgeInsets.symmetric(horizontal: 20.0),
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           decoration: BoxDecoration(
-              image: const DecorationImage(
-                image: AssetImage("assets/map.png"),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(20)),
+            image: const DecorationImage(
+              image: AssetImage("assets/map.png"),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
       ],
     );
@@ -103,15 +114,18 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Text(
-                'CARPOOL GROUP 1',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'CARPOOL GROUP 1',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,7 +150,9 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
               children: [
                 CustomIconText(icon: Icons.money, text: 'GAH 1234'),
                 CustomIconText(
-                    icon: Icons.format_paint_outlined, text: 'White'),
+                  icon: Icons.format_paint_outlined,
+                  text: 'White',
+                ),
                 CustomIconText(icon: Icons.drive_eta, text: 'Toyota'),
               ],
             ),
@@ -170,6 +186,7 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
         ),
       ),
     );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carpool Details'),
@@ -181,15 +198,14 @@ class _DriverCarpoolScreen2State extends State<DriverCarpoolScreen2> {
           PinLocation,
           MapImageAndGroupName,
           groupDetails,
+          const SizedBox(height: 20),
           CustomButton(
-            bgColor: isJoined ? Colors.green.shade700 : Colors.yellow.shade700,
-            onPressed: _toggleJoinGroup,
-            text: isJoined ? 'En route to Destination' : 'Picking-up Passengers',
+            bgColor: isArrived ? Colors.red : buttonText == 'Picking-up Passengers' ? Colors.yellow.shade800 : buttonText == 'En route to Destination' ? Colors.green.shade700 : Colors.grey.shade700,
+            onPressed: isArrived ? () {} : () => _toggleJoinGroup(),
+            text: buttonText,
             textColor: Colors.white,
           ),
-          
         ],
-        
       ),
     );
   }
