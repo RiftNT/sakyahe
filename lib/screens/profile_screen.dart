@@ -1,17 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool isEditing = false;
+  TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -61,27 +68,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icon(Icons.person),
                     SizedBox(width: 16),
                     Expanded(
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: userDoc.snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Text('Loading...');
-                          }
-                          final data = snapshot.data!.data();
-                          final name =
-                              (data as Map<String, dynamic>)['name'] as String? ??
-                                  'User';
-                          return Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 18,
+                      child: isEditing
+                          ? TextFormField(
+                              controller: _nameController,
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
+                            )
+                          : StreamBuilder<DocumentSnapshot>(
+                              stream: userDoc.snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Text('Loading...');
+                                }
+                                final data = snapshot.data!.data();
+                                final name = (data as Map<String, dynamic>)['name']
+                                        as String? ??
+                                    'User';
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isEditing = true;
+                                      _nameController.text = name;
+                                    });
+                                  },
+                                  child: Text(
+                                    name,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
+                    ),
+                    if (isEditing)
+                      IconButton(
+                        icon: const Icon(Icons.check),
+                        onPressed: () {
+                          setState(() {
+                            isEditing = false;
+                            _updateUserName(_nameController.text);
+                          });
                         },
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -102,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Text('Loading...');
+                            return const Text('Loading...');
                           }
                           final data = snapshot.data!.data();
                           final phoneNumber =
@@ -128,5 +160,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _updateUserName(String name) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
+    await userDoc.update({'name': name});
   }
 }
