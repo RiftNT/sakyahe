@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sakyahe/screens/driver_carpool_screen.dart';
 
 import 'home_screen.dart';
-import 'carpool_screen.dart';
 import 'messages_screen.dart';
 import 'account_screen.dart';
 

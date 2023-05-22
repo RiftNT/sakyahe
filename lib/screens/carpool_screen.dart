@@ -108,7 +108,7 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          DriverCarpoolScreen2(
+                                          CarpoolScreen2(
                                         carpooldetailsID:
                                             carpool['carpooldetailsID'],
                                       ),
@@ -216,7 +216,7 @@ class _CarpoolScreenState extends State<CarpoolScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          DriverCarpoolScreen2(
+                                          CarpoolScreen2(
                                         carpooldetailsID:
                                             carpool['carpooldetailsID'],
                                       ),

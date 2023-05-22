@@ -1,11 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:sakyahe/screens/chat_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 
 import '../widgets/custom_icontext.dart';
 
 class CarpoolScreen2 extends StatefulWidget {
-  const CarpoolScreen2({super.key});
+  final String carpooldetailsID;
+
+  const CarpoolScreen2({
+    Key? key,
+    required this.carpooldetailsID,
+  }) : super(key: key);
 
   @override
   State<CarpoolScreen2> createState() => _CarpoolScreen2State();
@@ -13,11 +21,205 @@ class CarpoolScreen2 extends StatefulWidget {
 
 class _CarpoolScreen2State extends State<CarpoolScreen2> {
   bool isJoined = false;
+  DocumentSnapshot? carpoolDetailsSnapshot;
+  DocumentSnapshot? driverDetailsSnapshot;
+  String pickupLocation = '';
+  String dropoffLocation = '';
+  String carpoolName = '';
+  String memberCount = '';
+  String date = '';
+  String time = '';
+  String driverName = '';
+  String carPlate = '';
+  String carMake = '';
+  String carColor = '';
+  int carCapacity = 0;
+  List<String> groupMembers = [];
 
-  void _toggleJoinGroup() {
-    setState(() {
-      isJoined = !isJoined;
-    });
+  @override
+  void initState() {
+    super.initState();
+    fetchCarpoolDetails(widget.carpooldetailsID);
+    _checkIfJoined();
+  }
+
+  void _checkIfJoined() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final String userID = user.uid;
+      final DocumentSnapshot<Map<String, dynamic>> carpoolDetailsSnapshot =
+          await FirebaseFirestore.instance
+              .collection('carpool_details')
+              .doc(widget.carpooldetailsID)
+              .get();
+
+      if (carpoolDetailsSnapshot.exists) {
+        Map<String, dynamic>? carpoolData = carpoolDetailsSnapshot.data();
+        if (carpoolData != null) {
+          String groupID = carpoolData['groupID'];
+          final DocumentSnapshot<Map<String, dynamic>> groupDetailsSnapshot =
+              await FirebaseFirestore.instance
+                  .collection('carpool_group')
+                  .doc(groupID)
+                  .get();
+
+          if (groupDetailsSnapshot.exists) {
+            Map<String, dynamic>? groupData = groupDetailsSnapshot.data();
+            if (groupData != null) {
+              List<dynamic>? studentUIDs = groupData['studentUIDs'];
+              if (studentUIDs != null && studentUIDs.contains(userID)) {
+                setState(() {
+                  isJoined = true;
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void fetchCarpoolDetails(String carpooldetailsID) async {
+    try {
+      // Fetch carpool details
+      DocumentSnapshot carpoolDetailsSnapshot = await FirebaseFirestore.instance
+          .collection('carpool_details')
+          .doc(carpooldetailsID)
+          .get();
+
+      if (carpoolDetailsSnapshot.exists) {
+        Map<String, dynamic>? carpoolData =
+            carpoolDetailsSnapshot.data() as Map<String, dynamic>?;
+
+        if (carpoolData != null) {
+          pickupLocation = carpoolData['pickupLocation'];
+          dropoffLocation = carpoolData['dropoffLocation'];
+          carpoolName = carpoolData['name'];
+          date = DateFormat('MMM d, yyyy')
+              .format((carpoolData['date'] as Timestamp).toDate());
+          time = carpoolData['time'].toString().split('(')[1].split(')')[0];
+          // Fetch group details
+          String groupID = carpoolData['groupID'];
+          DocumentSnapshot groupSnapshot = await FirebaseFirestore.instance
+              .collection('carpool_group')
+              .doc(groupID)
+              .get();
+
+          if (groupSnapshot.exists) {
+            Map<String, dynamic>? groupData =
+                groupSnapshot.data() as Map<String, dynamic>?;
+
+            if (groupData != null) {
+              List<dynamic> studentUIDs = groupData['studentUIDs'];
+              String driverUID = groupData['driverUID'];
+
+              // Fetch driver details
+
+              QuerySnapshot driverdetailsSnapshot = await FirebaseFirestore
+                  .instance
+                  .collection('driver_details')
+                  .where('userID', isEqualTo: driverUID)
+                  .get();
+
+              if (driverdetailsSnapshot.size > 0) {
+                DocumentSnapshot driverDoc = driverdetailsSnapshot.docs[0];
+                Map<String, dynamic>? driverData =
+                    driverDoc.data() as Map<String, dynamic>?;
+
+                if (driverData != null) {
+                  carPlate = driverData['carPlate'];
+                  carMake = driverData['carMake'];
+                  carColor = driverData['carColor'];
+                  carCapacity = driverData['carCapacity'];
+                }
+              }
+
+              DocumentSnapshot driverSnapshot = await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(driverUID)
+                  .get();
+
+              if (driverSnapshot.exists) {
+                Map<String, dynamic>? driverData =
+                    driverSnapshot.data() as Map<String, dynamic>?;
+
+                if (driverData != null) {
+                  driverName = driverData['name'];
+
+                  // Fetch students' names
+                  List<String> studentNames = [];
+                  studentNames.add(driverName);
+                  for (String studentUID in studentUIDs) {
+                    DocumentSnapshot studentSnapshot = await FirebaseFirestore
+                        .instance
+                        .collection('users')
+                        .doc(studentUID)
+                        .get();
+
+                    if (studentSnapshot.exists) {
+                      Map<String, dynamic>? studentData =
+                          studentSnapshot.data() as Map<String, dynamic>?;
+
+                      if (studentData != null) {
+                        String studentName = studentData['name'];
+                        studentNames.add(studentName);
+                      }
+                    }
+                  }
+
+                  setState(() {
+                    memberCount = '${studentNames.length}/${carCapacity}';
+                    driverName = driverName;
+                    groupMembers = studentNames;
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      print('Error fetching carpool details: $error');
+    }
+  }
+
+  void _toggleJoinGroup() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final String userID = user.uid;
+      final DocumentSnapshot<Map<String, dynamic>> carpoolDetailsSnapshot =
+          await FirebaseFirestore.instance
+              .collection('carpool_details')
+              .doc(widget.carpooldetailsID)
+              .get();
+
+      if (carpoolDetailsSnapshot.exists) {
+        Map<String, dynamic>? carpoolData =
+            carpoolDetailsSnapshot.data() as Map<String, dynamic>?;
+
+        if (carpoolData != null) {
+          String groupID = carpoolData['groupID'];
+          final DocumentReference<Map<String, dynamic>> groupDetailsRef =
+              FirebaseFirestore.instance
+                  .collection('carpool_group')
+                  .doc(groupID);
+
+          if (isJoined) {
+            groupDetailsRef.update({
+              'studentUIDs': FieldValue.arrayRemove([userID]),
+            });
+          } else {
+            groupDetailsRef.update({
+              'studentUIDs': FieldValue.arrayUnion([userID]),
+            });
+          }
+        }
+
+        setState(() {
+          isJoined = !isJoined;
+        });
+      }
+    }
   }
 
   Widget _buildChatButton() {
@@ -44,14 +246,14 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
   Widget build(BuildContext context) {
     Widget PinLocation = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         SizedBox(height: 30),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: TextField(
             style: TextStyle(fontSize: 15),
             decoration: InputDecoration(
-                hintText: 'Pick-up',
+                hintText: pickupLocation, // pickupLocation
                 isDense: true,
                 filled: true,
                 fillColor: Colors.black12,
@@ -66,7 +268,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
             style: TextStyle(fontSize: 15),
             decoration: InputDecoration(
               isDense: true,
-              hintText: 'Destination',
+              hintText: dropoffLocation, //destinationLocation
               filled: true,
               fillColor: Colors.black12,
               suffixIcon: Icon(Icons.location_pin),
@@ -101,17 +303,15 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
         ),
         const SizedBox(height: 5),
         const Icon(
-          //dako mukuha ug spacing, di mapadako ang width
           Icons.circle,
           size: 80,
           color: Colors.black12,
         ),
         const SizedBox(height: 5),
-        const Text(
-          'Juan Dela Cruz',
+        Text(
+          driverName, // driverName
           style: TextStyle(
             fontSize: 17,
-            // fontWeight: FontWeight.bold,
           ),
         ),
       ],
@@ -136,8 +336,8 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const Text(
-                'CARPOOL GROUP 1',
+              Text(
+                carpoolName,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -151,15 +351,16 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               children: [
                 CustomIconText(
                   icon: Icons.person,
-                  text: '3/4',
+                  text: memberCount,
+                  color: isJoined ? Colors.green : Colors.black,
                 ),
                 CustomIconText(
                   icon: Icons.calendar_today,
-                  text: 'June 15, 2023',
+                  text: date, // date
                 ),
                 CustomIconText(
                   icon: Icons.access_time,
-                  text: '8:00 AM',
+                  text: time, // time
                 ),
               ],
             ),
@@ -167,10 +368,10 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomIconText(icon: Icons.money, text: 'GAH 1234'),
+                CustomIconText(icon: Icons.money, text: carPlate),
                 CustomIconText(
-                    icon: Icons.format_paint_outlined, text: 'White'),
-                CustomIconText(icon: Icons.drive_eta, text: 'Toyota'),
+                    icon: Icons.format_paint_outlined, text: carColor),
+                CustomIconText(icon: Icons.drive_eta, text: carMake),
               ],
             ),
             const SizedBox(height: 10),

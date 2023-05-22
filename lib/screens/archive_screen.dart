@@ -28,7 +28,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('carpool_details')
-                  .where('hasFinished', isEqualTo: true)
+                  .where('hasArrived', isEqualTo: true)
                   .where('isDeleted', isEqualTo: false)
                   .snapshots(),
               builder: (context, snapshot) {
