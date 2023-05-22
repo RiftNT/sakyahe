@@ -32,27 +32,16 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
             color: Colors.white,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'YOUR CARPOOL GROUPS',
+              children: const [
+                Text(
+                  'NEAR YOU',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateCarpoolScreen(),
-                      ),
-                    );
-                  },
                 ),
               ],
             ),
           ),
           ListTile(
-            title: Padding(
+            title: const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text(
                 'Archive:',
@@ -115,75 +104,65 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                                 .doc(carpool['groupID'])
                                 .get(),
                             builder: (context, snapshot) {
-                              if (snapshot.hasData &&
-                                  snapshot.data!.exists &&
-                                  (snapshot.data! as dynamic)
-                                          .data()!['driverUID'] ==
-                                      'R4ilgpJfbtStkL8PXZ4RlX98hbD3') {
-                                String timePart =
-                                    carpool['time'].split('(')[1].split(')')[0];
-                                String datePart = DateFormat('MMM d, yyyy')
-                                    .format(carpool['date'].toDate());
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DriverCarpoolScreen2(
-                                          carpooldetailsID:
-                                              carpool['carpooldetailsID'],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    child: ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 20),
-                                      title: Text(carpool['name']),
-                                      subtitle: Text(
-                                          '${carpool['pickupLocation']} - ${carpool['dropoffLocation']}'),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                DateFormat('MMM d, yyyy')
-                                                    .format(carpool['date']
-                                                        .toDate()),
-                                              ),
-                                              Text(timePart),
-                                              const Text('₱50/person'),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 30),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            color: Colors.grey[200],
-                                            child: Row(
-                                              children: const [
-                                                Icon(Icons.people),
-                                                SizedBox(width: 5),
-                                                Text('3/4'),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                              String timePart =
+                                  carpool['time'].split('(')[1].split(')')[0];
+                              String datePart = DateFormat('MMM d, yyyy')
+                                  .format(carpool['date'].toDate());
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DriverCarpoolScreen2(
+                                        carpooldetailsID:
+                                            carpool['carpooldetailsID'],
                                       ),
                                     ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
+                                    title: Text(carpool['name']),
+                                    subtitle: Text(
+                                        '${carpool['pickupLocation']} - ${carpool['dropoffLocation']}'),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              DateFormat('MMM d, yyyy').format(
+                                                  carpool['date'].toDate()),
+                                            ),
+                                            Text(timePart),
+                                            const Text('₱50/person'),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 30),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          color: Colors.grey[200],
+                                          child: Row(
+                                            children: const [
+                                              Icon(Icons.people),
+                                              SizedBox(width: 5),
+                                              Text('3/4'),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                );
-                              } else {
-                                return SizedBox();
-                              }
+                                ),
+                              );
                             },
                           );
                         },
@@ -237,75 +216,65 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                                 .doc(carpool['groupID'])
                                 .get(),
                             builder: (context, snapshot) {
-                              if (snapshot.hasData &&
-                                  snapshot.data!.exists &&
-                                  (snapshot.data! as dynamic)
-                                          .data()!['driverUID'] ==
-                                      uid) {
-                                String timePart =
-                                    carpool['time'].split('(')[1].split(')')[0];
-                                String datePart = DateFormat('MMM d, yyyy')
-                                    .format(carpool['date'].toDate());
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DriverCarpoolScreen2(
-                                          carpooldetailsID:
-                                              carpool['carpooldetailsID'],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    child: ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 20),
-                                      title: Text(carpool['name']),
-                                      subtitle: Text(
-                                          '${carpool['pickupLocation']} - ${carpool['dropoffLocation']}'),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                DateFormat('MMM d, yyyy')
-                                                    .format(carpool['date']
-                                                        .toDate()),
-                                              ),
-                                              Text(timePart),
-                                              const Text('₱50/person'),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 30),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            color: Colors.grey[200],
-                                            child: Row(
-                                              children: const [
-                                                Icon(Icons.people),
-                                                SizedBox(width: 5),
-                                                Text('3/4'),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                              String timePart =
+                                  carpool['time'].split('(')[1].split(')')[0];
+                              String datePart = DateFormat('MMM d, yyyy')
+                                  .format(carpool['date'].toDate());
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DriverCarpoolScreen2(
+                                        carpooldetailsID:
+                                            carpool['carpooldetailsID'],
                                       ),
                                     ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
+                                    title: Text(carpool['name']),
+                                    subtitle: Text(
+                                        '${carpool['pickupLocation']} - ${carpool['dropoffLocation']}'),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              DateFormat('MMM d, yyyy').format(
+                                                  carpool['date'].toDate()),
+                                            ),
+                                            Text(timePart),
+                                            const Text('₱50/person'),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 30),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          color: Colors.grey[200],
+                                          child: Row(
+                                            children: const [
+                                              Icon(Icons.people),
+                                              SizedBox(width: 5),
+                                              Text('3/4'),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                );
-                              } else {
-                                return SizedBox();
-                              }
+                                ),
+                              );
                             },
                           );
                         },
