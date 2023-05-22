@@ -21,6 +21,7 @@ class CarpoolScreen2 extends StatefulWidget {
 
 class _CarpoolScreen2State extends State<CarpoolScreen2> {
   bool isJoined = false;
+  bool hasArrived = false;
   DocumentSnapshot? carpoolDetailsSnapshot;
   DocumentSnapshot? driverDetailsSnapshot;
   String pickupLocation = '';
@@ -57,6 +58,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
         Map<String, dynamic>? carpoolData = carpoolDetailsSnapshot.data();
         if (carpoolData != null) {
           String groupID = carpoolData['groupID'];
+          hasArrived = carpoolData['hasArrived'] ?? false;
           final DocumentSnapshot<Map<String, dynamic>> groupDetailsSnapshot =
               await FirebaseFirestore.instance
                   .collection('carpool_group')
@@ -168,7 +170,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
                   }
 
                   setState(() {
-                    memberCount = '${studentNames.length}/${carCapacity}';
+                    memberCount = '${studentNames.length - 1}/${carCapacity}';
                     driverName = driverName;
                     groupMembers = studentNames;
                   });
@@ -213,6 +215,8 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               'studentUIDs': FieldValue.arrayUnion([userID]),
             });
           }
+
+          fetchCarpoolDetails(widget.carpooldetailsID);
         }
 
         setState(() {
@@ -256,6 +260,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
                 hintText: pickupLocation, // pickupLocation
                 isDense: true,
                 filled: true,
+                enabled: false,
                 fillColor: Colors.black12,
                 suffixIcon: Icon(Icons.push_pin),
                 border: OutlineInputBorder()),
@@ -270,6 +275,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               isDense: true,
               hintText: dropoffLocation, //destinationLocation
               filled: true,
+              enabled: false,
               fillColor: Colors.black12,
               suffixIcon: Icon(Icons.location_pin),
               border: OutlineInputBorder(),
@@ -393,11 +399,14 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
           groupDetails,
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toggleJoinGroup,
-        backgroundColor: isJoined ? Colors.red : Colors.green,
-        child: isJoined ? const Text('Leave') : const Text('Join'),
-      ),
+      floatingActionButton: !hasArrived
+          ? FloatingActionButton(
+              // Check hasArrived before showing the button
+              onPressed: _toggleJoinGroup,
+              backgroundColor: isJoined ? Colors.red : Colors.green,
+              child: isJoined ? const Text('Leave') : const Text('Join'),
+            )
+          : null,
     );
   }
 }
