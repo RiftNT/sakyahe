@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:sakyahe/screens/chat_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../widgets/custom_icontext.dart';
 
@@ -36,6 +39,24 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
   String carColor = '';
   int carCapacity = 0;
   List<String> groupMembers = [];
+  String driverUID = '';
+  String _profilePictureUrl = '';
+
+  Future<void> _fetchProfilePictureUrl(final uid) async {
+    final storageRef = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('profilePictures')
+        .child('$uid.jpg');
+
+    try {
+      final downloadUrl = await storageRef.getDownloadURL();
+      setState(() {
+        _profilePictureUrl = downloadUrl;
+      });
+    } catch (error) {
+      print('Failed to fetch profile picture URL: $error');
+    }
+  }
 
   @override
   void initState() {
@@ -113,7 +134,7 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
 
             if (groupData != null) {
               List<dynamic> studentUIDs = groupData['studentUIDs'];
-              String driverUID = groupData['driverUID'];
+              driverUID = groupData['driverUID'];
 
               // Fetch driver details
 
@@ -248,6 +269,9 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    if (_profilePictureUrl.isEmpty) {
+      _fetchProfilePictureUrl(driverUID);
+    }
     Widget PinLocation = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -308,10 +332,19 @@ class _CarpoolScreen2State extends State<CarpoolScreen2> {
               borderRadius: BorderRadius.circular(20)),
         ),
         const SizedBox(height: 5),
-        const Icon(
-          Icons.circle,
-          size: 80,
-          color: Colors.black12,
+        CircleAvatar(
+          radius: 45,
+          backgroundColor: Colors.grey,
+          backgroundImage: _profilePictureUrl.isNotEmpty
+              ? NetworkImage(_profilePictureUrl)
+              : null,
+          child: _profilePictureUrl.isEmpty
+              ? const Icon(
+                  Icons.person,
+                  size: 60,
+                  color: Colors.white,
+                )
+              : null,
         ),
         const SizedBox(height: 5),
         Text(

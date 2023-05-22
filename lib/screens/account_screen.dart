@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:sakyahe/screens/profile_screen.dart';
 import 'package:sakyahe/screens/welcome_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -14,10 +17,32 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  String _profilePictureUrl = '';
+
+  Future<void> _fetchProfilePictureUrl(final uid) async {
+    final storageRef = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('profilePictures')
+        .child('$uid.jpg');
+
+    try {
+      final downloadUrl = await storageRef.getDownloadURL();
+      setState(() {
+        _profilePictureUrl = downloadUrl;
+      });
+    } catch (error) {
+      print('Failed to fetch profile picture URL: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
+
+    if (_profilePictureUrl.isEmpty) {
+      _fetchProfilePictureUrl(uid);
+    }
 
     Widget profileSection = GestureDetector(
       onTap: () {
@@ -38,20 +63,19 @@ class _AccountScreenState extends State<AccountScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 12.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: const [
-                      Icon(
-                        Icons.circle,
-                        size: 100,
-                        color: Colors.grey,
-                      ),
-                      Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.white,
-                      ),
-                    ],
+                  child: CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Colors.grey,
+                    backgroundImage: _profilePictureUrl.isNotEmpty
+                        ? NetworkImage(_profilePictureUrl)
+                        : null,
+                    child: _profilePictureUrl.isEmpty
+                        ? const Icon(
+                            Icons.person,
+                            size: 70,
+                            color: Colors.white,
+                          )
+                        : null,
                   ),
                 ),
                 Expanded(
@@ -138,6 +162,15 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               InkWell(
+                onTap: () {
+                  // Navigate to support page
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.credit_card),
+                  title: Text('Non-Cash Payment'),
+                ),
+              ),
+              InkWell(
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.pushAndRemoveUntil(
@@ -168,17 +201,17 @@ class _AccountScreenState extends State<AccountScreen> {
     );
 
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: const Text('Account'),
         backgroundColor: Colors.blueAccent[700],
         automaticallyImplyLeading: false,
       ),
-        body: ListView(
-          children: [
-            profileSection,
-            pagesSection,
-          ],
-        ),
-      );
+      body: ListView(
+        children: [
+          profileSection,
+          pagesSection,
+        ],
+      ),
+    );
   }
 }
