@@ -117,7 +117,6 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
                         child: const Text('Select Time'),
                       ),
                       Expanded(
-                        // Add this Expanded widget
                         child: Text(
                           _selectedDate == null || _selectedTime == null
                               ? ''
@@ -220,12 +219,10 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
   }
 
   void _createCarpoolGroup() async {
-    // Get the inputted values
     String carpoolGroupName = _carpoolGroupNameController.text;
     String pickupLocation = _pickupLocationController.text;
     String dropoffLocation = _dropoffLocationController.text;
 
-    // Check if all the forms are filled
     if (carpoolGroupName.isEmpty ||
         _selectedRoute == null ||
         _selectedDate == null ||
@@ -248,20 +245,16 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
       return;
     }
 
-    // Get the current user's ID
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Create a new document reference in the "carpool_group" collection
     CollectionReference carpoolGroupCollection =
         FirebaseFirestore.instance.collection('carpool_group');
     DocumentReference newCarpoolGroupRef = carpoolGroupCollection.doc();
 
-    // Create a new document reference in the "carpool_details" collection
     CollectionReference carpoolDetailsCollection =
         FirebaseFirestore.instance.collection('carpool_details');
     DocumentReference newCarpoolDetailsRef = carpoolDetailsCollection.doc();
 
-    // Build the data to be stored in Firestore
     Map<String, dynamic> carpoolGroupData = {
       'groupID': newCarpoolGroupRef.id,
       'studentUIDs': [],
@@ -275,16 +268,17 @@ class _CreateCarpoolScreenState extends State<CreateCarpoolScreen> {
       'route':
           _selectedRoute == CarpoolRoute.toSchool ? 'to school' : 'from school',
       'date': _selectedDate,
-      'time': _selectedTime.toString(), // Convert TimeOfDay to string
+      'time': _selectedTime.toString(),
       'pickupLocation': pickupLocation,
       'dropoffLocation': dropoffLocation,
+      'isDeleted': false,
+      'hasArrived': false, 
+      'groupID': newCarpoolGroupRef.id,
     };
 
-    // Store the data in Firestore
     await newCarpoolGroupRef.set(carpoolGroupData);
     await newCarpoolDetailsRef.set(carpoolDetailsData);
 
-    // Navigate to the driver carpool screen
     Navigator.push(
       context,
       MaterialPageRoute(
