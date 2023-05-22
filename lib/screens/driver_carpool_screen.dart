@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:sakyahe/widgets/custom_icontext.dart';
 
+import 'archive_screen.dart';
 import 'driver_carpool_screen2.dart';
 import 'driver_create_carpool_screen.dart';
 
@@ -49,9 +51,23 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
               ],
             ),
           ),
-          const Divider(
-            thickness: 1,
-            height: 0,
+          ListTile(
+            title: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                'Archive:',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            leading: Icon(Icons.archive),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ArchiveScreen(uid: uid),
+                ),
+              );
+            },
           ),
           Expanded(
             child: Column(
@@ -79,6 +95,7 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                         .collection('carpool_details')
                         .where('route', isEqualTo: 'to school')
                         .where('isDeleted', isEqualTo: false)
+                        .where('hasFinished', isEqualTo: false)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
@@ -165,7 +182,7 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                                   ),
                                 );
                               } else {
-                                return SizedBox(); // Return an empty SizedBox if the condition is not met
+                                return SizedBox();
                               }
                             },
                           );
@@ -200,6 +217,7 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                         .collection('carpool_details')
                         .where('route', isEqualTo: 'from school')
                         .where('isDeleted', isEqualTo: false)
+                        .where('hasFinished', isEqualTo: false)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
@@ -222,7 +240,8 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                               if (snapshot.hasData &&
                                   snapshot.data!.exists &&
                                   (snapshot.data! as dynamic)
-                                          .data()!['driverUID'] == uid) {
+                                          .data()!['driverUID'] ==
+                                      uid) {
                                 String timePart =
                                     carpool['time'].split('(')[1].split(')')[0];
                                 String datePart = DateFormat('MMM d, yyyy')
@@ -285,7 +304,7 @@ class _DriverCarpoolScreenState extends State<DriverCarpoolScreen> {
                                   ),
                                 );
                               } else {
-                                return SizedBox(); // Return an empty SizedBox if the condition is not met
+                                return SizedBox();
                               }
                             },
                           );
