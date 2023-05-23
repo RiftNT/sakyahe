@@ -101,9 +101,19 @@ class _AccountScreenState extends State<AccountScreen> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                name,
-                                style: const TextStyle(fontSize: 18),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.verified,
+                                    color: Colors.blue,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 8), 
+                                  Text(
+                                    name,
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                ],
                               ),
                             ),
                             Text(
@@ -168,6 +178,15 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: const ListTile(
                   leading: Icon(Icons.credit_card),
                   title: Text('Non-Cash Payment'),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  // Navigate to support page
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.verified_user_outlined),
+                  title: Text('Verify Your Account'),
                 ),
               ),
               InkWell(

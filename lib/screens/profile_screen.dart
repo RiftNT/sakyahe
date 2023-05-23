@@ -124,6 +124,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     (data as Map<String, dynamic>)['name']
                                             as String? ??
                                         'User';
+
+                                if (isEditing || data['type'] == 'driver') {
+                                  return Text(
+                                    name,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  );
+                                }
+
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
