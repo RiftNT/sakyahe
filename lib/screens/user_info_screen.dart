@@ -6,6 +6,8 @@ import 'package:sakyahe/screens/register_screen.dart';
 import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/home_screen.dart';
 
+import 'nonVerifiedNav.dart';
+
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key}) : super(key: key);
 
@@ -82,7 +84,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const NavScreen(),
+                              builder: (context) => const NonVerNavScreen(),
                             ),
                           );
                         }
