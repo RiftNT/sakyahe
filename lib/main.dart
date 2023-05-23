@@ -6,6 +6,7 @@ import 'package:sakyahe/screens/home_screen.dart';
 import 'package:sakyahe/screens/login_screen.dart';
 import 'package:sakyahe/screens/nav.dart';
 import 'package:sakyahe/screens/navDriver.dart';
+import 'package:sakyahe/screens/nonVerifiedNav.dart';
 import 'package:sakyahe/screens/otp_screen.dart';
 import 'package:sakyahe/screens/profile_screen.dart';
 import 'package:sakyahe/screens/register_screen.dart';
@@ -55,28 +56,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void checkAuthState() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    if (auth.currentUser != null) {
-      final User user = auth.currentUser!;
-      DocumentSnapshot snapshot =
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      String userType = snapshot.get('type');
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  if (auth.currentUser != null) {
+    final User user = auth.currentUser!;
+    DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    bool isVerified = snapshot.get('isVerified');
 
+    if (isVerified) {
+      String userType = snapshot.get('type');
       if (userType == 'driver') {
-        Future.delayed(Duration.zero, () {
-          Navigator.pushReplacementNamed(context, 'navDriver');
-        });
+        Navigator.pushReplacementNamed(context, 'navDriver');
       } else {
-        Future.delayed(Duration.zero, () {
-          Navigator.pushReplacementNamed(context, 'nav');
-        });
+        Navigator.pushReplacementNamed(context, 'nav');
       }
     } else {
-      Future.delayed(Duration.zero, () {
-        Navigator.pushReplacementNamed(context, 'welcome');
-      });
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NonVerNavScreen()));
     }
+  } else {
+    Navigator.pushReplacementNamed(context, 'welcome');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

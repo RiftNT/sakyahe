@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:sakyahe/screens/profile_screen.dart';
+import 'package:sakyahe/screens/verify_account_screen.dart';
 import 'package:sakyahe/screens/welcome_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -18,6 +19,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   String _profilePictureUrl = '';
+  bool isVerified = false;
 
   Future<void> _fetchProfilePictureUrl(final uid) async {
     final storageRef = firebase_storage.FirebaseStorage.instance
@@ -96,6 +98,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         final phoneNumber = data.containsKey('phoneNumber')
                             ? data['phoneNumber'] as String
                             : 'Phone';
+                        isVerified = data['isVerified'];
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -103,12 +106,13 @@ class _AccountScreenState extends State<AccountScreen> {
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Row(
                                 children: [
-                                  const Icon(
-                                    Icons.verified,
-                                    color: Colors.blue,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 8), 
+                                  if (isVerified)
+                                    const Icon(
+                                      Icons.verified,
+                                      color: Colors.blue,
+                                      size: 18,
+                                    ),
+                                  const SizedBox(width: 8),
                                   Text(
                                     name,
                                     style: const TextStyle(fontSize: 18),
@@ -180,15 +184,23 @@ class _AccountScreenState extends State<AccountScreen> {
                   title: Text('Non-Cash Payment'),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  // Navigate to support page
-                },
-                child: const ListTile(
-                  leading: Icon(Icons.verified_user_outlined),
-                  title: Text('Verify Your Account'),
+              if (!isVerified)
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Scaffold(
+                          body: VerifyAccountScreen(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: const ListTile(
+                    leading: Icon(Icons.verified_user_outlined),
+                    title: Text('Verify Your Account'),
+                  ),
                 ),
-              ),
               InkWell(
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();

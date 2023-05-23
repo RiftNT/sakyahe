@@ -8,6 +8,7 @@ import 'package:sakyahe/widgets/custom_button.dart';
 import 'package:sakyahe/screens/user_info_screen.dart';
 
 import 'navDriver.dart';
+import 'nonverifiedNav.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -107,19 +108,24 @@ class _OtpScreenState extends State<OtpScreen> {
                         if (result.docs.isNotEmpty) {
                           final user = result.docs.first;
                           final userType = user.get('type');
+                          final isVerified = user.get('isVerified');
 
-                          if (userType == 'student') {
+                          if (!isVerified) {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => NavScreen()),
+                              MaterialPageRoute(builder: (context) => NonVerNavScreen()),
+                              (route) => false,
+                            );
+                          } else if (userType == 'student') {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => NavScreen()),
                               (route) => false,
                             );
                           } else if (userType == 'driver') {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => NavDriverScreen()),
+                              MaterialPageRoute(builder: (context) => NavDriverScreen()),
                               (route) => false,
                             );
                           }
