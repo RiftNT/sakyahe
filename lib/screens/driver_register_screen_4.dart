@@ -75,10 +75,11 @@ class _DriverRegisterScreen4State extends State<DriverRegisterScreen4> {
                   'gender': widget.gender,
                   'carMake': widget.carMake,
                   'carType': widget.carType,
-                  'carPlateNo': widget.carPlateNo,
+                  'carPlate': widget.carPlateNo,
                   'carColor': widget.carColor,
                   'carCapacity': widget.carCapacity,
                   'governmentId': widget.governmentId,
+                  'userID': "",
                 };
 
                 FirebaseFirestore.instance
