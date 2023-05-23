@@ -32,7 +32,7 @@ class _DriverRegisterScreen2State extends State<DriverRegisterScreen2> {
   String carType = '';
   String carPlateNo = '';
   String carColor = '';
-  String carCapacity = '';
+  int carCapacity = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +197,7 @@ class _DriverRegisterScreen2State extends State<DriverRegisterScreen2> {
                 return null;
               },
               onChanged: (value) {
-                carCapacity = value;
+                carCapacity = int.parse(value);
               },
               decoration: InputDecoration(
                 hintText: "Car Capacity",

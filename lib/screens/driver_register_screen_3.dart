@@ -13,7 +13,7 @@ class DriverRegisterScreen3 extends StatefulWidget {
   final String carType;
   final String carPlateNo;
   final String carColor;
-  final String carCapacity;
+  final int carCapacity;
 
   const DriverRegisterScreen3({
     Key? key,
