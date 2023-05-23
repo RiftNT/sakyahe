@@ -45,7 +45,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
-                // Register and Login buttons
                 Row(
                   children: [
                     Expanded(
@@ -78,21 +77,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const DriverRegisterScreen(), //temp only
+                SizedBox(
+                  height: 40,
+                  child: CustomButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DriverRegisterScreen(),
+                        ),
+                      );
+                    },
+                    text: "Work as Driver",
+                    bgColor: Colors.white,
+                    textColor: Colors.black,
+                    leadingIcon: Icons.drive_eta,
                   ),
-                );
-                  },
-
-                  child: CustomIconText(
-                    icon: Icons.drive_eta,
-                    text: 'Work as Driver',
-                  )
                 ),
               ],
             ),
